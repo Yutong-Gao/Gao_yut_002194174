@@ -11,9 +11,11 @@ import Business.EcoSystem;
 import Business.Restaurant.Restaurant;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -60,9 +62,9 @@ public class ManageOrders extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnAccept = new javax.swing.JButton();
+        btnRefuse = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -92,11 +94,26 @@ public class ManageOrders extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jButton1.setText("accept");
+        btnAccept.setText("accept");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("refuse");
+        btnRefuse.setText("refuse");
+        btnRefuse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefuseActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("choose");
+        btnBack.setText("back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("宋体", 0, 36)); // NOI18N
         jLabel1.setText("Orders");
@@ -112,16 +129,14 @@ public class ManageOrders extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(143, 143, 143)
-                        .addComponent(jButton1)
+                        .addComponent(btnAccept)
                         .addGap(54, 54, 54)
-                        .addComponent(jButton2))
+                        .addComponent(btnRefuse))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6))
             .addGroup(layout.createSequentialGroup()
                 .addGap(185, 185, 185)
@@ -129,6 +144,10 @@ public class ManageOrders extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addGap(33, 33, 33))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addGap(290, 290, 290))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,12 +162,62 @@ public class ManageOrders extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(248, Short.MAX_VALUE))
+                    .addComponent(btnAccept)
+                    .addComponent(btnRefuse))
+                .addGap(82, 82, 82)
+                .addComponent(btnBack)
+                .addContainerGap(137, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        // TODO add your handling code here:
+        int selectRowIndex = jTable1.getSelectedRow();
+        if(selectRowIndex<0){
+           JOptionPane.showMessageDialog(this, "Please select a row to accept.");
+           return;
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        WorkRequest order =(WorkRequest)model.getValueAt(selectRowIndex, 2);
+        
+        int selectRowIndex2 = jTable2.getSelectedRow();
+        if(selectRowIndex2<0){
+           JOptionPane.showMessageDialog(this, "Please select a deliveryMan to accept.");
+           return;
+        }
+        DefaultTableModel model2 = (DefaultTableModel) jTable2.getModel();
+        int id =(Integer)model.getValueAt(selectRowIndex2, 1);
+        DeliveryMan deliveryMan = new DeliveryMan();
+        for(DeliveryMan de :ecosystem.getDeliveryManDirectory().getDeliveryManList()){
+            if(de.getId()==id){
+                deliveryMan = de;
+            }
+        }
+        
+        ecosystem.getWorkQueue().acceptOrder(deliveryMan, order);
+        populateOrder();
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnRefuseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefuseActionPerformed
+        // TODO add your handling code here:
+        int selectRowIndex = jTable1.getSelectedRow();
+        if(selectRowIndex<0){
+           JOptionPane.showMessageDialog(this, "Please select a row to refuse.");
+           return;
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        WorkRequest order =(WorkRequest)model.getValueAt(selectRowIndex, 2);
+        ecosystem.getWorkQueue().refuseOrder(order);
+        populateOrder();
+    }//GEN-LAST:event_btnRefuseActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        JPanel adminWorkAreaJPanel  = new AdminWorkAreaJPanel(userProcessContainer,restaurant.getUserAccount(),ecosystem);
+        userProcessContainer.add(adminWorkAreaJPanel);
+        CardLayout crdLyt = (CardLayout) userProcessContainer.getLayout();
+        crdLyt.next(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     public void populateOrder(){
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -180,9 +249,9 @@ public class ManageOrders extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnAccept;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnRefuse;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

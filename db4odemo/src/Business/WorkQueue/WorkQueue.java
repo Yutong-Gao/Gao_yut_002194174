@@ -5,6 +5,7 @@
 package Business.WorkQueue;
 
 import Business.Customer.Customer;
+import Business.DeliveryMan.DeliveryMan;
 import Business.Restaurant.Restaurant;
 import Business.UserAccount.UserAccount;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class WorkQueue {
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
         order.setItems(items);
-        order.setStatus("waiting for deliver");
+        order.setStatus("waiting for accept");
         this.workRequestList.add(order);
         return order;
     }
@@ -41,5 +42,22 @@ public class WorkQueue {
                 o.setComments(comment);
             }
         }
-    }   
+    }
+    
+    public void acceptOrder(DeliveryMan deliveryMan,WorkRequest order){
+        for(WorkRequest o : this.workRequestList){
+            if(o.equals(order)){
+                o.setDeliveryMan(deliveryMan);
+                o.setStatus("waiting to delivery");
+            }
+        }
+    }
+    
+    public void refuseOrder(WorkRequest order){
+        for(WorkRequest o : this.workRequestList){
+            if(o.equals(order)){
+                o.setStatus("refused");
+            }
+        }
+    }
 }

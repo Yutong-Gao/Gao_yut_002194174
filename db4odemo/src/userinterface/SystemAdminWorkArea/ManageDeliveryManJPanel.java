@@ -8,6 +8,7 @@ package userinterface.SystemAdminWorkArea;
 import Business.Customer.Customer;
 import Business.DeliveryMan.DeliveryMan;
 import Business.EcoSystem;
+import java.awt.CardLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -51,6 +52,7 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         btnDelete = new javax.swing.JButton();
         btnAddNew = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -97,6 +99,13 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnBack.setText("back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,6 +136,10 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(btnDelete)
                 .addGap(74, 74, 74))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(300, 300, 300)
+                .addComponent(btnBack)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +162,9 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddNew)
                     .addComponent(btnUpdate))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addGap(40, 40, 40))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -222,6 +237,14 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        JPanel systemAdminWorkAreaJPanel  = new SystemAdminWorkAreaJPanel(userProcessContainer,ecosystem);
+        userProcessContainer.add(systemAdminWorkAreaJPanel);
+        CardLayout crdLyt = (CardLayout) userProcessContainer.getLayout();
+        crdLyt.next(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
+
     private void populateTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);     
@@ -240,6 +263,7 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNew;
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnView;
