@@ -5,6 +5,7 @@
  */
 package Business.DeliveryMan;
 
+import Business.UserAccount.UserAccount;
 import java.util.ArrayList;
 
 /**
@@ -26,10 +27,11 @@ public class DeliveryManDirectory {
         deliveryManList = new ArrayList();
     }
     
-    public DeliveryMan createDeliveryMan(String name,double wage){
+    public DeliveryMan createDeliveryMan(String name,double wage,UserAccount userAccount){
         DeliveryMan deliveryMan = new DeliveryMan();
         deliveryMan.setWage(wage);
         deliveryMan.setName(name);
+        deliveryMan.setUserAccount(userAccount);
         deliveryManList.add(deliveryMan);
         return deliveryMan;
     }
@@ -41,11 +43,12 @@ public class DeliveryManDirectory {
             
     }
     
-    public void updateDeliveryMan(int id,String name,double wage){
+    public void updateDeliveryMan(int id,String name,double wage,UserAccount userAccount){
          for(DeliveryMan deliveryMan:this.deliveryManList){
             if (deliveryMan.getId()==id){
                 deliveryMan.setWage(wage);
                 deliveryMan.setName(name);
+                deliveryMan.setUserAccount(userAccount);
                 
             }
          }

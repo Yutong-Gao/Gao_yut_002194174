@@ -5,6 +5,8 @@
  */
 package Business.DeliveryMan;
 
+import Business.UserAccount.UserAccount;
+
 /**
  *
  * @author harold
@@ -12,6 +14,15 @@ package Business.DeliveryMan;
 public class DeliveryMan {
     private String name;
     private int id;
+    private UserAccount userAccount;
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
     private static int count=1;
     private double wage;
 

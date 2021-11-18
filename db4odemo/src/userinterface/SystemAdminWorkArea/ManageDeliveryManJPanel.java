@@ -8,6 +8,9 @@ package userinterface.SystemAdminWorkArea;
 import Business.Customer.Customer;
 import Business.DeliveryMan.DeliveryMan;
 import Business.EcoSystem;
+import Business.Employee.Employee;
+import Business.Role.DeliverManRole;
+import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,16 +56,20 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         btnAddNew = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtUserName = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Id", "Name", "Wage"
+                "Id", "Name", "Wage", "UserName", "Password"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -106,6 +113,10 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel3.setText("UserName");
+
+        jLabel4.setText("Password");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,7 +138,14 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
                                     .addComponent(btnAddNew)
                                     .addComponent(txtWage))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdate)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnUpdate)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(txtUserName))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -153,11 +171,15 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtWage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtWage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddNew)
@@ -180,7 +202,9 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         for(DeliveryMan deliveryMan:ecosystem.getDeliveryManDirectory().getDeliveryManList()){
             if (deliveryMan.getId()==id){
             txtName.setText(deliveryMan.getName());
-            txtWage.setText(String.valueOf(deliveryMan.getWage()));          
+            txtWage.setText(String.valueOf(deliveryMan.getWage()));
+            txtUserName.setText(deliveryMan.getUserAccount().getUsername());
+            txtPassword.setText(deliveryMan.getUserAccount().getPassword());
             }
         }
         
@@ -212,17 +236,25 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         String name = txtName.getText();
         double wage = Double.valueOf(txtWage.getText());
-        DeliveryMan deliveryMan = ecosystem.getDeliveryManDirectory().createDeliveryMan(name, wage);
+        String username = txtUserName.getText();
+        String password = txtPassword.getText();
+        UserAccount ua = ecosystem.getUserAccountDirectory().createUserAccount(username, password, new Employee(), new DeliverManRole());
+        DeliveryMan deliveryMan = ecosystem.getDeliveryManDirectory().createDeliveryMan(name, wage,ua);
         JOptionPane.showMessageDialog(this, "DeliveryMan added.");
         populateTable();
         txtName.setText("");
-        txtWage.setText("");        
+        txtWage.setText(""); 
+        txtUserName.setText("");
+        txtPassword.setText("");
     }//GEN-LAST:event_btnAddNewActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         String name = txtName.getText();
         double wage = Double.valueOf(txtWage.getText());
+        String username = txtUserName.getText();
+        String password = txtPassword.getText();
+        
         int selectRowIndex = jTable1.getSelectedRow();
         if(selectRowIndex<0){
            JOptionPane.showMessageDialog(this, "Please select a row to update.");
@@ -230,7 +262,8 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         }
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int id =(Integer)model.getValueAt(selectRowIndex, 0);
-        ecosystem.getDeliveryManDirectory().updateDeliveryMan(id, name, wage);
+        UserAccount ua = ecosystem.getUserAccountDirectory().updateUserAccount(username, password);
+        ecosystem.getDeliveryManDirectory().updateDeliveryMan(id, name, wage,ua);
         populateTable();
         
         
@@ -250,10 +283,12 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
         model.setRowCount(0);     
         for(DeliveryMan deliveryMan:ecosystem.getDeliveryManDirectory().getDeliveryManList()){
            
-            Object[] row = new Object[8];
+            Object[] row = new Object[5];
             row[0] = deliveryMan.getId();
             row[1] = deliveryMan.getName();
-            row[2] = deliveryMan.getWage();           
+            row[2] = deliveryMan.getWage();
+            row[3] = deliveryMan.getUserAccount().getUsername();
+            row[4] = deliveryMan.getUserAccount().getPassword();
             model.addRow(row);
         }
         
@@ -269,9 +304,13 @@ public class ManageDeliveryManJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnView;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtUserName;
     private javax.swing.JTextField txtWage;
     // End of variables declaration//GEN-END:variables
 }

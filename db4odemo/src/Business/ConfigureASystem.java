@@ -9,6 +9,7 @@ import Business.Restaurant.Restaurant;
 import Business.Restaurant.RestaurantDirectory;
 import Business.Role.AdminRole;
 import Business.Role.CustomerRole;
+import Business.Role.DeliverManRole;
 import Business.Role.SystemAdminRole;
 import Business.UserAccount.UserAccount;
 
@@ -30,9 +31,7 @@ public class ConfigureASystem {
         //have some employees 
         //create user account
         
-        DeliveryMan d1 = system.getDeliveryManDirectory().createDeliveryMan("d1", 60.0);
-        DeliveryMan d2 = system.getDeliveryManDirectory().createDeliveryMan("d2", 60.0);
-        DeliveryMan d3 = system.getDeliveryManDirectory().createDeliveryMan("d3", 60.0);
+        
         
         Employee employee = system.getEmployeeDirectory().createEmployee("RRH");
         
@@ -41,6 +40,14 @@ public class ConfigureASystem {
         UserAccount ua3 = system.getUserAccountDirectory().createUserAccount("r2", "r", employee, new AdminRole());
         UserAccount ua4 = system.getUserAccountDirectory().createUserAccount("c1", "c", employee, new CustomerRole());
         UserAccount ua5 = system.getUserAccountDirectory().createUserAccount("c2", "c", employee, new CustomerRole());
+        UserAccount ua6 = system.getUserAccountDirectory().createUserAccount("d1", "d", employee, new DeliverManRole());
+        UserAccount ua7 = system.getUserAccountDirectory().createUserAccount("d2", "d", employee, new DeliverManRole());
+        UserAccount ua8 = system.getUserAccountDirectory().createUserAccount("d3", "d", employee, new DeliverManRole());
+        
+        DeliveryMan d1 = system.getDeliveryManDirectory().createDeliveryMan("d1", 60.0,ua6);
+        DeliveryMan d2 = system.getDeliveryManDirectory().createDeliveryMan("d2", 60.0,ua7);
+        DeliveryMan d3 = system.getDeliveryManDirectory().createDeliveryMan("d3", 60.0,ua8);
+        
         
         Restaurant r1 = system.getRestaurantDirectory().createRestaurant("five guys", 1234567891, "261 Huntington Ave,Boston",ua2);
         Restaurant r2 = system.getRestaurantDirectory().createRestaurant("chipotle", 1234567892, "148 Brookline Ave,Boston",ua3);
