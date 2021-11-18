@@ -39,6 +39,12 @@ public class DeliveryMan {
         id = count;
         count++;
     }
+
+    @Override
+    public String toString() {
+        return  name ;
+    }
+    
     
     
 }
