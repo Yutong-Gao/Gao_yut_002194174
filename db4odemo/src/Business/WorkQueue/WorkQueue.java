@@ -60,4 +60,13 @@ public class WorkQueue {
             }
         }
     }
+    
+    public void deliveredOrder(WorkRequest order){
+        for(WorkRequest o : this.workRequestList){
+            if(o.equals(order)){
+                o.setStatus("delivered");
+            }
+        }
+    
+    }
 }

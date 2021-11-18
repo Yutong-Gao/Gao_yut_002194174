@@ -4,11 +4,14 @@
  */
 package userinterface.DeliveryManRole;
 
+import Business.DeliveryMan.DeliveryMan;
 import Business.EcoSystem;
 
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.WorkRequest;
 import java.awt.CardLayout;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,7 +24,8 @@ public class DeliveryManWorkAreaJPanel extends javax.swing.JPanel {
     private JPanel userProcessContainer;
     private EcoSystem business;
     private UserAccount userAccount;
-    
+    private ArrayList<WorkRequest> orderd;
+    private DeliveryMan deliveryMan;
     
     /**
      * Creates new form LabAssistantWorkAreaJPanel
@@ -32,7 +36,17 @@ public class DeliveryManWorkAreaJPanel extends javax.swing.JPanel {
         this.userProcessContainer = userProcessContainer;
         this.userAccount = account;
         this.business = business;
-      
+        for(DeliveryMan d : business.getDeliveryManDirectory().getDeliveryManList()){
+            if(d.getUserAccount().equals(account));{
+                deliveryMan = d;
+            }
+        }
+        
+        for(WorkRequest order : business.getWorkQueue().getWorkRequestList()){
+            if(order.getDeliveryMan().equals(deliveryMan)){
+                orderd.add(order);
+            }
+        }
         
         populateTable();
     }
@@ -46,7 +60,7 @@ public class DeliveryManWorkAreaJPanel extends javax.swing.JPanel {
             row[0] = order.getCustomer().getUsername();  
             row[1] = order.getCustomer().getPhoneNum();
             row[2] = order.getCustomer().getAddress();
-            row[3] = order.getItems();
+            row[3] = order;
             row[4] = order.getRestaurant().getName();
             row[5] = order.getRestaurant().getPhoneNum();
             row[6] = order.getRestaurant().getAddress();
@@ -96,6 +110,14 @@ public class DeliveryManWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshJButtonActionPerformed
+        int selectRowIndex = jTable1.getSelectedRow();
+        if(selectRowIndex<0){
+           JOptionPane.showMessageDialog(this, "Please select a order to deliver.");
+           return;
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        WorkRequest order =(WorkRequest)model.getValueAt(selectRowIndex, 3);
+        business.getWorkQueue().deliveredOrder(order);
         populateTable();
     }//GEN-LAST:event_refreshJButtonActionPerformed
 
