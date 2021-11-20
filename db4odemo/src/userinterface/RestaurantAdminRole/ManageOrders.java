@@ -186,7 +186,7 @@ public class ManageOrders extends javax.swing.JPanel {
            return;
         }
         DefaultTableModel model2 = (DefaultTableModel) jTable2.getModel();
-        int id =(Integer)model.getValueAt(selectRowIndex2, 1);
+        int id =(Integer)model2.getValueAt(selectRowIndex2, 1);
         DeliveryMan deliveryMan = new DeliveryMan();
         for(DeliveryMan de :ecosystem.getDeliveryManDirectory().getDeliveryManList()){
             if(de.getId()==id){
